@@ -18,6 +18,9 @@ namespace VinorgiARAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //allow everything
+            builder.WebHost.UseUrls("http://0.0.0.0:5151");
+
             // Add database context
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
