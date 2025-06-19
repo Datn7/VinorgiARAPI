@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VinorgiARAPI.Data;
 
 namespace VinorgiARAPI.Controllers
@@ -15,18 +16,19 @@ namespace VinorgiARAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetModel(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            var model = await _context.Models.FindAsync(id);
-            if (model == null)
-                return NotFound();
+            var models = await _context.Models
+                .Select(m => new
+                {
+                    m.Id,
+                    m.FileUrl,
+                    m.UploadedAt
+                })
+                .ToListAsync();
 
-            return Ok(new
-            {
-                model.Id,
-                model.FileUrl
-            });
+            return Ok(models);
         }
     }
 }
