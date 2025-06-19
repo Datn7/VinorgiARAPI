@@ -32,7 +32,7 @@ namespace VinorgiARAPI
             {
                 options.AddPolicy("AllowClient", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200")
+                    policy.WithOrigins("http://localhost:4200", "http://192.168.31.61:4200")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .SetIsOriginAllowed(origin => true) // TEMP: allow any origin

@@ -27,7 +27,7 @@ namespace VinorgiARAPI.Controllers
             if (model == null)
                 return NotFound("Model not found.");
 
-            var baseUrl = _config["AppSettings:ViewerBaseUrl"]; // e.g., https://vinorgi-ar-viewer.com/ar-viewer
+            var baseUrl = _config["AppSettings:ViewerBaseUrl"]; // e.g. http://localhost:4200/ar-viewer
             var qrContent = $"{baseUrl}?modelId={model.Id}";
 
             using var qrGenerator = new QRCodeGenerator();
