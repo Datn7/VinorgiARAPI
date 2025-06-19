@@ -1,10 +1,11 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using VinorgiARAPI.Data;
 using VinorgiARAPI.Models;
+using VinorgiARAPI.Services;
 
 namespace VinorgiARAPI
 {
@@ -22,6 +23,10 @@ namespace VinorgiARAPI
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+
+
+            //Add My Token Service
+            builder.Services.AddScoped<TokenService>();
 
             // JWT configuration
             var jwtKey = builder.Configuration["Jwt:Key"];
