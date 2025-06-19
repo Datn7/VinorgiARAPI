@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using VinorgiARAPI.Data;
@@ -24,6 +26,25 @@ namespace VinorgiARAPI
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+
+            //Add Cors
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowClient", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .SetIsOriginAllowed(origin => true) // TEMP: allow any origin
+                          .AllowCredentials(); // Optional: only if you're using cookies
+                });
+            });
+
+            //Detailed error message
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = false;
+            });
 
 
             //Add My Token Service
@@ -69,12 +90,19 @@ namespace VinorgiARAPI
             app.UseSwaggerUI();
 
             // Middleware
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+
+            app.UseCors("AllowClient");
 
             app.UseAuthentication(); // Must be before UseAuthorization
             app.UseAuthorization();
 
-            app.UseStaticFiles(); // To serve uploaded models from wwwroot/Uploads
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
+                RequestPath = ""
+            }); // To serve uploaded models from wwwroot/Uploads
 
             app.MapControllers();
 

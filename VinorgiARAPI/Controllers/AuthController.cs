@@ -25,8 +25,11 @@ namespace VinorgiARAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto dto)
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); // ← Add this for debugging
+
             var user = new ApplicationUser
             {
                 UserName = dto.Username,
@@ -44,17 +47,23 @@ namespace VinorgiARAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(dto.Email);
+                if (user == null)
+                    return Unauthorized("Invalid email");
 
-            if (user == null)
-                return Unauthorized("Invalid email");
+                var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+                if (!result.Succeeded)
+                    return Unauthorized("Invalid password");
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
-
-            if (!result.Succeeded)
-                return Unauthorized("Invalid password");
-
-            return Ok(new { token = _tokenService.CreateToken(user) });
+                return Ok(new { token = _tokenService.CreateToken(user) });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Login error: " + ex.Message);
+                return StatusCode(500, "Internal Server Error: " + ex.Message);
+            }
         }
     }
 }

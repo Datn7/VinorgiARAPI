@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>AR Model Viewer</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <model-viewer id="viewer"
+                  alt="3D model"
+                  ar
+                  ar-modes="scene-viewer webxr quick-look"
+                  auto-rotate
+                  camera-controls
+                  exposure="1"
+                  shadow-intensity="1">
+    </model-viewer>
+
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    const modelId = params.get("modelId");
+
+    fetch(`/api/models/${modelId}`)
+      .then(res => res.json())
+      .then(data => {
+        const modelViewer = document.getElementById("viewer");
+        modelViewer.setAttribute("src", data.fileUrl);
+      })
+      .catch(err => alert("Failed to load model: " + err));
+    </script>
+</body>
+</html>
