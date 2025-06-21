@@ -6,8 +6,8 @@ using VinorgiARAPI.Models;
 
 namespace VinorgiARAPI.Controllers
 {
+    [Route("api/models")]
     [ApiController]
-    [Route("api/[controller]")]
     public class UploadController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -19,8 +19,9 @@ namespace VinorgiARAPI.Controllers
             _env = env;
         }
 
-        [HttpPost]
+
         [Authorize]
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadModel(IFormFile file)
         {
             if (file == null || file.Length == 0)
