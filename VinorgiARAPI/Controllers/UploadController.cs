@@ -6,6 +6,7 @@ using VinorgiARAPI.Models;
 
 namespace VinorgiARAPI.Controllers
 {
+    [RequestSizeLimit(100_000_000)] // 100MB example
     [Route("api/models")]
     [ApiController]
     public class UploadController : ControllerBase
