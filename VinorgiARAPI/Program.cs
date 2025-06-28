@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -100,12 +101,13 @@ namespace VinorgiARAPI
             app.UseAuthentication(); // Must be before UseAuthorization
             app.UseAuthorization();
 
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".glb"] = "model/gltf-binary";
+
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
-                RequestPath = ""
-            }); // To serve uploaded models from wwwroot/Uploads
+                ContentTypeProvider = provider
+            });
 
             app.MapControllers();
 
