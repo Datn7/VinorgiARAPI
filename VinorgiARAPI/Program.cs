@@ -101,6 +101,7 @@ namespace VinorgiARAPI
             app.UseAuthentication(); // Must be before UseAuthorization
             app.UseAuthorization();
 
+            //use static files to support glb
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".glb"] = "model/gltf-binary";
 
