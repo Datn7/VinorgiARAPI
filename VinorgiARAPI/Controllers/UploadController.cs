@@ -20,7 +20,6 @@ namespace VinorgiARAPI.Controllers
             _env = env;
         }
 
-
         [Authorize]
         [HttpPost("upload")]
         public async Task<IActionResult> UploadModel(IFormFile file)
@@ -60,6 +59,31 @@ namespace VinorgiARAPI.Controllers
                 model.FileUrl,
                 model.UploadedAt
             });
+        }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteModel(int id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var model = await _context.Models.FindAsync(id);
+
+            if (model == null)
+                return NotFound();
+
+            if (model.UserId != userId)
+                return Forbid();
+
+            var filePath = Path.Combine(_env.WebRootPath, "Uploads", model.FileName);
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            _context.Models.Remove(model);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
