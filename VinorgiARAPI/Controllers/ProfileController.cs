@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VinorgiARAPI.Data;
 using VinorgiARAPI.DTOs;
 using VinorgiARAPI.Models;
