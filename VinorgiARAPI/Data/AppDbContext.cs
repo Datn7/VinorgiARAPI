@@ -12,6 +12,7 @@ namespace VinorgiARAPI.Data
         }
 
         public DbSet<Model3D> Models { get; set; }
+        public DbSet<Model3D> Models3D { get; set; }
 
         protected AppDbContext()
         {
