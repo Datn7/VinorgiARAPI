@@ -30,5 +30,22 @@ namespace VinorgiARAPI.Controllers
 
             return Ok(models);
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetByUser(string userId)
+        {
+            var models = await _context.Models
+                .Where(m => m.UserId == userId)
+                .Select(m => new {
+                    m.Id,
+                    m.FileUrl,
+                    m.FileName,
+                    m.UploadedAt
+                })
+                .ToListAsync();
+
+            return Ok(models);
+        }
+
     }
 }
