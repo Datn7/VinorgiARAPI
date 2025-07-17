@@ -47,5 +47,16 @@ namespace VinorgiARAPI.Controllers
             return Ok(models);
         }
 
+        // Your method goes here:
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetModelsForUser(string userId)
+        {
+            var models = await _context.Models
+                .Where(m => m.UserId == userId)
+                .ToListAsync();
+
+            return Ok(models);
+        }
+
     }
 }

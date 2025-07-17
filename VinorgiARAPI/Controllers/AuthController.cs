@@ -57,7 +57,17 @@ namespace VinorgiARAPI.Controllers
                 if (!result.Succeeded)
                     return Unauthorized("Invalid password");
 
-                return Ok(new { token = _tokenService.CreateToken(user) });
+                return Ok(new
+                {
+                    token = _tokenService.CreateToken(user),
+                    user = new
+                    {
+                        id = user.Id,
+                        email = user.Email,
+                        displayName = user.DisplayName,
+                        profileImageUrl = user.ProfileImageUrl
+                    }
+                });
             }
             catch (Exception ex)
             {
