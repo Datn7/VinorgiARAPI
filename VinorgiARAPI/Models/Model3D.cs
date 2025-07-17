@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VinorgiARAPI.Models
 {
+    [Table("Models")]
     public class Model3D
     {
         public int Id { get; set; }
