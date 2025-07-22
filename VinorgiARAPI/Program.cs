@@ -36,11 +36,9 @@ namespace VinorgiARAPI
             {
                 options.AddPolicy("AllowClient", policy =>
                 {
-                    policy.WithOrigins()
+                    policy.AllowAnyOrigin()
                           .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .SetIsOriginAllowed(origin => true) // TEMP: allow any origin
-                          .AllowCredentials(); // Optional: only if you're using cookies
+                          .AllowAnyMethod();
                 });
             });
 
